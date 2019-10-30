@@ -2,7 +2,7 @@
 	<nb-container>
 		<navbar :navigation="navigation" :left="true" hasTabs />
 
-		<c-text class="title" color="dark-green" size="md" weight="semi-bold" align="c">{{ item.title }}</c-text>
+		<c-text class="title" color="dark-green" size="md" weight="semi-bold" align="c">{{ data.name }}</c-text>
 
 		<carousel
 			:data="entries"
@@ -16,7 +16,7 @@
 		<view class="desc">
 
 			<view class="desc-nav">
-	      <touchable-opacity v-for="(n,i) in data" 
+	      <touchable-opacity v-for="(n,i) in title" 
 	      	class="desc-touch"
 	      	:key="i"
 	      	:on-press="() => changeDesc(i)"
@@ -26,14 +26,14 @@
 		        	align="c"
 		        	:weight="active == i ? 'semi-bold' : 'regular'"
 		        	:color="active == i ? 'dark-green' : 'light'"
-		        >{{ n.title }}</c-text>
+		        >{{ n }}</c-text>
 		      </view>
 	      </touchable-opacity>
 	    </view>
 
 		    <view class="desc-content">
 		    	<scroll-view>
-			    	<c-text class="desc-text">{{ data[active].content }}</c-text>
+			    	<c-text class="desc-text">{{ content }}</c-text>
 			    </scroll-view>
 		    </view>
 
@@ -44,6 +44,7 @@
 <script>
 	import React from 'react';
 	import { Dimensions, Image, View } from 'react-native';
+	import axios from 'axios';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -54,43 +55,36 @@
 		props: ['navigation'],
 		data: () => ({
 			active: 0,
-			data: [
-				{
-					title: 'Deskripsi', 
-					content: 'Aenean sollicitudin sagittis congue. Vivamus ultrices vel nibh varius efficitur. Suspendisse feugiat urna nisl, vehicula egestas nisi finibus et. Morbi bibendum imperdiet elit nec tristique.'
-				},
-				{
-					title: 'Gejala', 
-					content: '> Nulla bibendum \n> urna maximus \n> lectus \n> hendrerit scelerisque \n> Nam lobortis \n> nisi sit amet \n> orci consequat blandit'
-				},
-				{
-					title: 'Pengendalian', 
-					content: '		Donec fringilla quis est tempor lobortis. Quisque orci turpis, condimentum lacinia vulputate malesuada, finibus condimentum quam. Duis viverra porttitor finibus. Quisque tincidunt varius cursus. Integer bibendum, turpis et pretium malesuada, ex ligula volutpat arcu, ac condimentum ex massa nec elit. Donec mattis est eget felis sagittis efficitur. Curabitur non varius dui, sit amet commodo quam. \n\n 		Pellentesque volutpat magna nisl, quis placerat massa sagittis a. Donec eget nunc nec erat scelerisque euismod nec et velit. Etiam vel erat convallis, consectetur sapien in, ullamcorper nisi. Morbi accumsan convallis sem, a vehicula tortor interdum eu. Vivamus felis nibh, sodales vel venenatis eget, auctor et urna. Quisque et lacus sem. Integer mattis bibendum ornare. Nullam at justo euismod, viverra felis non, rhoncus lectus. Phasellus sed sollicitudin dui. Duis lacinia odio sit amet nisl feugiat convallis.\n\n 		Pellentesque volutpat magna nisl, quis placerat massa sagittis a. Donec eget nunc nec erat scelerisque euismod nec et velit. Etiam vel erat convallis, consectetur sapien in, ullamcorper nisi. Morbi accumsan convallis sem, a vehicula tortor interdum eu. Vivamus felis nibh, sodales vel venenatis eget, auctor et urna. Quisque et lacus sem. Integer mattis bibendum ornare. Nullam at justo euismod, viverra felis non, rhoncus lectus. Phasellus sed sollicitudin dui. Duis lacinia odio sit amet nisl feugiat convallis.\n\n 		Pellentesque volutpat magna nisl, quis placerat massa sagittis a. Donec eget nunc nec erat scelerisque euismod nec et velit. Etiam vel erat convallis, consectetur sapien in, ullamcorper nisi. Morbi accumsan convallis sem, a vehicula tortor interdum eu. Vivamus felis nibh, sodales vel venenatis eget, auctor et urna. Quisque et lacus sem. Integer mattis bibendum ornare. Nullam at justo euismod, viverra felis non, rhoncus lectus. Phasellus sed sollicitudin dui. Duis lacinia odio sit amet nisl feugiat convallis.'
-				},
-			]
+			entries: [],
+			data: {},
+			title: ['Deskripsi', 'Gejala', 'Pengendalian'],
+			content: '',
 		}),
 		computed: {
-			entries() {
-				let ent = [];
-				for (var i = 5; i >= 0; i--) {
-					ent[i] = this.item.img;
-				}
-
-				return ent;
-			},
-			item() {
-				return this.navigation.getParam('item', {});
-			},
 			screenWidth() {
 				return Dimensions.get('window').width;
 			}
 		},
 		methods: {
+			getData() {
+				let id = this.navigation.getParam('id', 0);
+				axios.get('http://209.97.169.78:4367/libraries/detail/'+id)
+				.then(({data}) => {
+					this.data = data;
+					this.content = data.description;
+					this.entries = data.images;
+				});
+			},
 			navigate(to) {
 				this.navigation.navigate(to);
 			},
 			changeDesc(i) {
 				this.active = i;
+				switch(i){
+					case 1: this.content = this.data.description; break;
+					case 2: this.content = this.data.indication; break;
+					case 3: this.content = this.data.control; break;
+				}
 			},
 			renderSlider({item, index}) {
 				const imgwidth = this.screenWidth * 75 / 100;
@@ -109,7 +103,7 @@
 							backgroundColor: 'white',
 						}}>
 							<Image
-								source={item}
+								source={{uri: 'http://209.97.169.78:4367/libraries/image/'+item.thumbnail}}
 								style={{
 									width: imgwidth,
 									height: height,
@@ -121,6 +115,9 @@
 					</View>
 				);
 			}
+		},
+		created() {
+			this.getData();
 		}
 	}
 </script>

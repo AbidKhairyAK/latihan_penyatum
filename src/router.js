@@ -23,7 +23,7 @@ const StackNavigatior = createStackNavigator(
 		Notifikasi,
 	},
 	{
-		initialRouteName: 'Login',
+		initialRouteName: 'Konsultasi',
 		headerMode: 'none',
 	}
 );

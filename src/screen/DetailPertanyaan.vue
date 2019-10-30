@@ -3,28 +3,25 @@
 		<navbar :navigation="navigation" title="Konsultasi" left/>
 
 		<view class="container">
-			<scroll-view>
+			<activity-indicator v-if="loading" :style="{marginTop: 30}" :size="50" color="#255d00"/>
+
+			<scroll-view v-else>
 				<view class="wrapper">
 
 					<view class="image-wrapper">
-						<image class="image" :source="require('../../assets/img/hama3.jpg')" />
+						<image class="image" :source="{uri: 'http://209.97.169.78:4367/consultations/image/'+item.image}" />
 					</view>
 
 					<nb-badge class="badge">
-		          <c-text weight="semi-bold" color="light">Hama</c-text>
+		          <c-text weight="semi-bold" color="light">{{ item.type.name }}</c-text>
 		      </nb-badge>
-					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">Etiam iaculis felis quam, vel cursus erat Nulla euismod arcu?</c-text>
+					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">{{ item.title }}</c-text>
 
-					<c-text class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquet pretium ornare. Fusce ut ipsum finibus mi lacinia iaculis eget ac lacus. Pellentesque mi nunc, dignissim ut massa nec, pulvinar porta lacus.
-					{{'\n'}}> eget ac lacus.{{'\n'}}> Fusce ut.{{'\n'}}> pulvinar porta lacus.{{'\n'}}> retium ornare.
-					{{'\n'}}Vestibulum eleifend sodales dui a auctor. Nam tempus enim nec imperdiet tristique?
-					</c-text>
+					<markdown>{{ item.indication }}</markdown>
 
 					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">Jawaban:</c-text>
 
-					<c-text class="desc">Mauris pharetra vehicula semper. Vestibulum nec libero pharetra, volutpat turpis eget, posuere justo. Maecenas lobortis facilisis lorem, vel porttitor mauris hendrerit sit amet. Vestibulum justo dolor, tristique et ultricies id, feugiat vel velit. Sed nunc lectus, accumsan.
-					{{'\n'}}Mauris pharetra vehicula semper. Vestibulum nec libero pharetra, volutpat turpis eget, posuere justo. Maecenas lobortis facilisis lorem, vel porttitor mauris hendrerit sit amet. Vestibulum justo dolor, tristique et ultricies id, feugiat vel velit. Sed nunc lectus, accumsan.
-					</c-text>
+					<markdown>{{ item.answer }}</markdown>
 
 
 				</view>
@@ -35,12 +32,33 @@
 </template>
 
 <script>
+	import axios from 'axios';
+	import Markdown from 'react-native-markdown-renderer';
+
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
 
 	export default {
 		props: ['navigation'],
-		components: {Navbar, CText},
+		components: {Navbar, CText, Markdown},
+		data: () => ({
+			loading: true,
+			item: {}
+		}),
+		methods: {
+			getData() {
+				const itemId = this.navigation.getParam('itemId', '0');
+
+				axios.get(`http://209.97.169.78:4367/consultations/detail/${itemId}`)
+				.then((r) => {
+					this.item = r.data;
+					this.loading = false;
+				});
+			}
+		},
+		created() {
+			this.getData();
+		}
 	}
 </script>
 

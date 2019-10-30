@@ -2,25 +2,27 @@
 	<view class="container">
 		<view class="search-wrapper">
 			<nb-item rounded class="search-item">
-		    <nb-input class="search-input" :placeholder="'Cari '+title+'...'"/>
-		    <touchable-opacity>
+		    <nb-input class="search-input" v-model="query" :placeholder="'Cari '+title+'...'"/>
+		    <touchable-opacity :on-press="() => getData()">
 			    <nb-icon name="search" class="search-icon"/>
 			  </touchable-opacity>
 		  </nb-item>
 		</view>
 
-	  <scroll-view>
+		<activity-indicator :style="{marginTop: 30}" :size="50" color="#255d00" v-if="loading"/>
+
+	  <scroll-view v-else>
 	  	<view class="list">
-	  		<touchable-opacity :on-press="() => navigate(listItem[title][n%3])" v-for="n in 22" class="list-item" :key="n">
+	  		<touchable-opacity :on-press="() => navigate({id: item.id})" v-for="(item, index) in data" class="list-item" :key="index">
 		  		<view>
 		  			<view class="list-image-wrapper" :on-layout="(event) => getListWidth(event)">
 		  				<image class="list-image" 
 		  					resize-mode="contain" 
-		  					:source="listItem[title][n%3].img" 
+		  					:source="{uri: 'http://209.97.169.78:4367/libraries/image/'+item.thumbnail}" 
 		  					:style="{height: listWidth}"
 		  				/>
 		  			</view>
-		  			<c-text class="list-title" align="c" :size="11">{{ listItem[title][n%3].title }}</c-text>
+		  			<c-text class="list-title" align="c" :size="11">{{ item.name }}</c-text>
 		  		</view>
 		  	</touchable-opacity>
 	  	</view>
@@ -29,6 +31,8 @@
 </template>
 
 <script>
+	import axios from 'axios';
+
 	import CText from '../item/CText';
 
 	export default {
@@ -36,31 +40,28 @@
 		props: ['navigation', 'title'],
 		data: () => ({
 			listWidth: 0,
-			listItem:{
-				hama: [
-					{title: 'Tungau', img: require(`../../assets/img/hama1.jpg`)},
-					{title: 'Ulat Grayak', img: require(`../../assets/img/hama2.jpg`)},
-					{title: 'Kutu Putih', img: require(`../../assets/img/hama3.jpg`)},
-				],
-				penyakit: [
-					{title: 'Hawar Daun Bakteri', img: require(`../../assets/img/penyakit1.jpg`)},
-					{title: 'Layu Fusarium', img: require(`../../assets/img/penyakit2.jpg`)},
-					{title: 'Bercak Daun', img: require(`../../assets/img/penyakit3.jpg`)},
-				],
-				abiotik: [
-					{title: 'Kurang Nutrisi', img: require(`../../assets/img/abiotik1.jpg`)},
-					{title: 'Overwatering', img: require(`../../assets/img/abiotik2.jpg`)},
-					{title: 'Suhu', img: require(`../../assets/img/abiotik3.jpg`)},
-				]
-			}
+			data: {},
+			loading: true,
+			query: ''
 		}),
 		methods: {
 			getListWidth(event) {
 				this.listWidth = event.nativeEvent.layout.width;
 			},
 			navigate(item) {
-				this.navigation.navigate('Detail', {item});
-			}
+				this.navigation.navigate('Detail', item);
+			},
+			getData() {
+				this.loading = true;
+				axios.get('http://209.97.169.78:4367/libraries/list/'+this.title+'?s='+this.query)
+				.then(({data}) => {
+					this.data = data.data;
+					this.loading = false;
+				});
+			},
+		},
+		created() {
+			this.getData();
 		}
 	}
 </script>

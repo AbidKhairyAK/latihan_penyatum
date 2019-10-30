@@ -1,46 +1,67 @@
 <template>
 	<nb-container>
+		<navigation-events :on-will-focus="() => getData()"></navigation-events>
+
 		<navbar :navigation="navigation" title="Konsultasi" left/>
 
-	    <view class="container">
-	    	<nb-button full rounded class="ask" :on-press="() => navigate('Tanya')">
-	        <c-text
-	        	color="light"
-	        	weight="medium"
-	        	:size="17"
-	        >Ajukan pertanyaan ></c-text>
-	      </nb-button>
+    <view class="container">
+    	<nb-button full rounded class="ask" :on-press="() => navigate('Tanya')">
+        <c-text
+        	color="light"
+        	weight="medium"
+        	:size="17"
+        >Ajukan pertanyaan ></c-text>
+      </nb-button>
 
-	    	<c-text class="respon-title" size="sm" color="dark-green" weight="semi-bold">Respon pertanyaan anda</c-text>
+    	<c-text class="respon-title" size="sm" color="dark-green" weight="semi-bold">Respon pertanyaan anda</c-text>
 
-	    	<scroll-view>
-		    	<view class="respon-table">
-		    		<touchable-opacity class="respon-row" 
-		    			:style=" n%2 ? {backgroundColor: '#eee'} : ''" 
-		    			v-for="n in 30"
-		    			:on-press="() => navigate('DetailPertanyaan')"
-		    		>
-		    			<c-text class="respon-question respon-col">Pertanyaan {{ n }}</c-text>
-		    			<c-text class="respon-status respon-col">{{ n%2 ? 'Terjawab' : 'belum' }}</c-text>
-		    		</touchable-opacity>
-		    	</view>
-		    </scroll-view>
-	    </view>
+    	<scroll-view>
+			<activity-indicator v-if="loading" :style="{marginTop: 30}" :size="50" color="#255d00"/>
+	    	<view class="respon-table" v-else>
+	    		<touchable-opacity class="respon-row" 
+	    			:style=" i%2 ? {backgroundColor: '#eee'} : ''" 
+	    			v-for="(item, i) in items"
+	    			:on-press="() => navigate('DetailPertanyaan', {itemId: item.id})"
+	    		>
+	    			<c-text class="respon-question respon-col">{{ item.title }}</c-text>
+	    			<c-text class="respon-status respon-col">{{ item.status }}</c-text>
+	    		</touchable-opacity>
+	    	</view>
+	    </scroll-view>
+    </view>
 
 	</nb-container>
 </template>
 
 <script>
+	import axios from 'axios';
+	import { NavigationEvents } from 'vue-native-router';
+
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
 
 	export default {
-		components: {Navbar, CText},
+		components: {Navbar, CText, NavigationEvents},
 		props: ['navigation'],
+		data: () => ({
+			items: [],
+			loading: true,
+		}),
 		methods: {
-			navigate(to) {
-				this.navigation.navigate(to);
-			}
+			getData() {
+				this.loading = true;
+				axios.get(`http://209.97.169.78:4367/consultations/list`)
+				.then((r) => {
+					this.items = r.data.data;
+					this.loading = false;
+				});
+			},
+			navigate(to, param) {
+				this.navigation.navigate(to, param);
+			},
+		},
+		created() {
+			this.getData();
 		}
 	}
 </script>
@@ -61,7 +82,6 @@
 	.respon-table {
 		border-width: 1;
 		border-color: #255d00;
-		flex-direction: column-reverse;
 	}
 	.respon-row {
 		flex-direction: row;
