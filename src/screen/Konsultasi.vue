@@ -36,6 +36,7 @@
 <script>
 	import axios from 'axios';
 	import { NavigationEvents } from 'vue-native-router';
+	import AsyncStorage from '@react-native-community/async-storage';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -48,12 +49,20 @@
 			loading: true,
 		}),
 		methods: {
-			getData() {
+			async getData() {
+				const userToken = await AsyncStorage.getItem('@userToken');
+
 				this.loading = true;
-				axios.get(`http://209.97.169.78:4367/consultations/list`)
+				axios.post(`${this.$url}/api/consultations/list`, {}, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
 				.then((r) => {
 					this.items = r.data.data;
 					this.loading = false;
+				})
+				.catch((e) => {
+					alert(e.message);
+					console.log(e.response);
 				});
 			},
 			navigate(to, param) {

@@ -59,6 +59,7 @@
 <script>
 	import ImagePicker from 'react-native-image-picker';
 	import axios from 'axios';
+	import AsyncStorage from '@react-native-community/async-storage';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -96,13 +97,17 @@
 					});
 				}
 			},
-			sendData() {
+			async sendData() {
 				const f = this.form;
-				if (f.title==null || f.type_id==null || f.indication==null || f.image==null) {
-					return alert('Semua kolom harus terisi!');
+				const userToken = await AsyncStorage.getItem('@userToken');
+
+				if (f.title==null || f.type_id==null || f.indication==null) {
+					return alert('Kolom judul, tipe, dan gejala tidak boleh kosong!');
 				}
 				this.loading = true;
-				axios.post('http://209.97.169.78:4367/api/consultations/store', f)
+				axios.post(`${this.$url}/api/consultations/save`, f, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
 				.then((r) => {
 					// console.log(r.data);
 					// this.loading = false;
@@ -110,7 +115,8 @@
 				})
 				.catch((e) => {
 					this.loading = false;
-					alert(JSON.stringify(e));
+					alert(e.message);
+					console.log(e.response);
 				});
 			}
 		}

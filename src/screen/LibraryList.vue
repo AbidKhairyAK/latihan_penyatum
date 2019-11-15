@@ -18,7 +18,7 @@
 		  			<view class="list-image-wrapper" :on-layout="(event) => getListWidth(event)">
 		  				<image class="list-image" 
 		  					resize-mode="contain" 
-		  					:source="{uri: 'http://209.97.169.78:4367/libraries/image/'+item.thumbnail}" 
+		  					:source="{uri: $url+'/libraries/image/'+item.thumbnail}" 
 		  					:style="{height: listWidth}"
 		  				/>
 		  			</view>
@@ -53,7 +53,7 @@
 			},
 			getData() {
 				this.loading = true;
-				axios.get('http://209.97.169.78:4367/libraries/list/'+this.title+'?s='+this.query)
+				axios.get(this.$url+'/libraries/list/'+this.title+'?s='+this.query)
 				.then(({data}) => {
 					this.data = data.data;
 					this.loading = false;

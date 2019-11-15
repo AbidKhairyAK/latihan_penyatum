@@ -8,9 +8,11 @@
 			<scroll-view v-else>
 				<view class="wrapper">
 
-					<view class="image-wrapper">
-						<image class="image" :source="{uri: 'http://209.97.169.78:4367/consultations/image/'+item.image}" />
-					</view>
+					<touchable-opacity :on-press="() => zooming($url+'/api/consultations/image/'+item.original)">
+						<view class="image-wrapper">
+							<image class="image" :source="{uri: $url+'/api/consultations/image/'+item.thumbnail}" />
+						</view>
+					</touchable-opacity>
 
 					<nb-badge class="badge">
 		          <c-text weight="semi-bold" color="light">{{ item.type.name }}</c-text>
@@ -28,32 +30,48 @@
 			</scroll-view>
 		</view>
 
+		<zoom v-if="zooms.status" :src="zooms.img" :close="closeZoom"></zoom>
+
 	</nb-container>
 </template>
 
 <script>
 	import axios from 'axios';
 	import Markdown from 'react-native-markdown-renderer';
+	import AsyncStorage from '@react-native-community/async-storage';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
+	import Zoom from '../item/Zoom';
 
 	export default {
 		props: ['navigation'],
-		components: {Navbar, CText, Markdown},
+		components: {Navbar, CText, Markdown, Zoom},
 		data: () => ({
 			loading: true,
-			item: {}
+			item: {},
+			zooms: {img: null, status: false}
 		}),
 		methods: {
-			getData() {
+			async getData() {
+				const userToken = await AsyncStorage.getItem('@userToken');
 				const itemId = this.navigation.getParam('itemId', '0');
 
-				axios.get(`http://209.97.169.78:4367/consultations/detail/${itemId}`)
+				axios.post(`${this.$url}/api/consultations/detail/${itemId}`, {}, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
 				.then((r) => {
 					this.item = r.data;
 					this.loading = false;
 				});
+			},
+			zooming(src) {
+				this.zooms.img = src;
+				this.zooms.status = true;
+			},
+			closeZoom() {
+				this.zooms.img = null;
+				this.zooms.status = false;
 			}
 		},
 		created() {

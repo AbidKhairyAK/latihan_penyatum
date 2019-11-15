@@ -15,21 +15,23 @@
 
 		    	<c-text class="subtitle" color="dark-green" size="md" weight="semi-bold">Form Login</c-text>
 
-		      <c-text color="dark-green" class="label">Username</c-text>
+		      <c-text color="dark-green" class="label">Email</c-text>
 		      <nb-item class="item" regular>
-		        <nb-input class="input"/>
+		        <nb-input class="input" v-model="form.email" auto-capitalize="none" keyboard-type="email-address" text-content-type="emailAddress" auto-complete-type="email"/>
 		      </nb-item>
 
 			    <c-text color="dark-green" class="label">Password</c-text>
 		      <view class="pass">
 			      <nb-item class="item pass-item" regular>
-			        <nb-input class="input" secureTextEntry />
+			        <nb-input class="input" secureTextEntry v-model="form.password"/>
 			      </nb-item>
 
-		      	<nb-button success full small class="button" :on-press="() => navigate('Home')"><c-text weight="bold" color="light">Login >></c-text></nb-button>
+		      	<nb-button success full small class="button" :on-press="() => login()" v-if="!loading"><c-text weight="bold" color="light">Login >></c-text></nb-button>
+						<activity-indicator :style="{marginTop: 5, flex: 3}" :size="30" color="#255d00" v-if="loading"/>
+
 			    </view>
 				
-				<touchable-opacity :on-press="() => navigate('Register')"><c-text class="reg-button" color="dark-green">Belum punya akun? Registrasi</c-text></touchable-opacity>
+				<touchable-opacity :on-press="() => navigation.navigate('Register')"><c-text class="reg-button" color="dark-green">Belum punya akun? Registrasi</c-text></touchable-opacity>
 		    </nb-form>
 		  </image-background>
 
@@ -38,13 +40,44 @@
 
 <script>
 import CText from '../item/CText';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default {
 	components: {CText},
 	props: ['navigation'],
+	data: () => ({
+		loading: false,
+		form: {
+			email: null, password: null
+		}
+	}),
 	methods: {
-		navigate(to) {
-			this.navigation.navigate(to);
+		login() {
+			if (this.form.email == null || this.form.password == null) {
+				alert('Semua kolom harus terisi!');
+				return;
+			}
+
+			this.loading = true;
+
+			axios.post(this.$url+'/api/auth/login/', this.form)
+			.then((res) => {
+				AsyncStorage.setItem('@userToken', res.data.access_token);
+				this.navigation.navigate('AppStack');
+			})
+			.catch((e) => {
+				const stat = e.response.status;
+				if (stat == 401) {
+					alert('Maaf, anda belum terdaftar. Silahkan Registrasi terlebih dahulu.');
+				} else {
+					alert('Terjadi kesalahan dengan kode '+e+'. silahkan hubungi admin');
+				}
+			})
+			.finally(() => {
+				this.loading = false;
+			});
+
 		}
 	}
 }

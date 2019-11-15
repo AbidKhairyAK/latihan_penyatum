@@ -9,13 +9,20 @@
 		<nb-body>
 			<nb-title></nb-title>
 		</nb-body>
-		<nb-right v-if="right">
+		<nb-right v-if="right" class="right">
+			<nb-button transparent :on-press="() => logout()" v-if="!loading">
+				<nb-icon name="sign-out-alt" type="FontAwesome5"/>
+			</nb-button>
+			<activity-indicator :size="30" color="#fff" v-if="loading"/>
 		</nb-right>
 		<text class="title">{{ title }}</text>
 	</nb-header>
 </template>
 
 <script>
+	import AsyncStorage from '@react-native-community/async-storage';
+	import axios from 'axios';
+
 	export default {
 		props: {
 				navigation: Object,
@@ -24,6 +31,23 @@
 				hasTabs: {default: false},
 				title: {default: 'PestBook'}
 		},
+		data: () => ({
+			loading: false,
+		}),
+		methods: {
+			async logout() {
+				this.loading = true;
+				const userToken = await AsyncStorage.getItem('@userToken');
+				axios.post(this.$dev_url+'/api/auth/logout', {}, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
+				.finally(() => {
+					this.loading = false;
+					AsyncStorage.removeItem('@userToken');
+					this.navigation.navigate('AuthStack');
+				});
+			}
+		}
 	}
 </script>
 
@@ -40,6 +64,9 @@
 		color: #eee;
 	}
 	.left {
+		z-index: 1;
+	}
+	.right {
 		z-index: 1;
 	}
 </style>

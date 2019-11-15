@@ -1,6 +1,6 @@
 <template>
 	<nb-container>
-		<navbar />
+		<navbar :navigation="navigation" right/>
 
 		<view class="menu-wrapper">
 				<view class="menu-item-wrapper">

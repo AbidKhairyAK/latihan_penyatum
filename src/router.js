@@ -1,7 +1,10 @@
-import { createStackNavigator } from 'vue-native-router';
+import { createStackNavigator, createSwitchNavigator } from 'vue-native-router';
+
+import AuthLoading from './screen/AuthLoading.vue';
 
 import Login from './screen/Login.vue';
 import Register from './screen/Register.vue';
+
 import Home from './screen/Home.vue';
 import Library from './screen/Library.vue';
 import Detail from './screen/Detail.vue';
@@ -10,10 +13,10 @@ import Tanya from './screen/Tanya.vue';
 import DetailPertanyaan from './screen/DetailPertanyaan.vue';
 import Notifikasi from './screen/Notifikasi.vue';
 
-const StackNavigatior = createStackNavigator(
+import Test from './screen/Test.vue';
+
+const AppStack = createStackNavigator(
 	{
-		Login,
-		Register,
 		Home,
 		Library,
 		Detail,
@@ -23,9 +26,33 @@ const StackNavigatior = createStackNavigator(
 		Notifikasi,
 	},
 	{
-		initialRouteName: 'Konsultasi',
+		initialRouteName: 'Home',
 		headerMode: 'none',
 	}
 );
 
-export default StackNavigatior;
+const AuthStack = createStackNavigator(
+	{
+		Login,
+		Register
+	},
+	{
+		initialRouteName: 'Login',
+		headerMode: 'none',
+	}
+);
+
+const AllStack = createSwitchNavigator(
+	{
+		Test,
+		AuthLoading,
+		AuthStack,
+		AppStack,
+	},
+	{
+		initialRouteName: 'AuthLoading',
+		headerMode: 'none',
+	}
+)
+
+export default AllStack;

@@ -11,6 +11,8 @@
   // import Store from './src/store.js';
 
   Vue.use(VueNativeBase);
+  Vue.prototype.$url = "http://209.97.169.78:4367";
+  Vue.prototype.$dev_url = "http://root-d4ka.localhost.run";
 
   // Vue.prototype.$store = Store;
 
