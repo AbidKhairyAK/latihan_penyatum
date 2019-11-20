@@ -6,15 +6,25 @@
   import React from 'react';
   import Vue from 'vue-native-core';
   import { VueNativeBase } from 'native-base';
-  import StackNavigator from './src/router.js';
   import { createAppContainer } from 'vue-native-router';
+  import AsyncStorage from '@react-native-community/async-storage';
+  import axios from 'axios';
+
+  import StackNavigator from './src/router.js';
   // import Store from './src/store.js';
 
   Vue.use(VueNativeBase);
-  Vue.prototype.$url = "http://209.97.169.78:4367";
-  Vue.prototype.$dev_url = "http://root-d4ka.localhost.run";
+
+  const base_url = 'http://root-dpbk.localhost.run';
+  // const base_url = 'http://209.97.169.78:4367';
 
   // Vue.prototype.$store = Store;
+  Vue.prototype.$url = base_url;
+  Vue.prototype.$storage = AsyncStorage;
+  Vue.prototype.$axios = axios.create({
+    baseURL: base_url,
+  });
+
 
   const AppNavigator = createAppContainer(StackNavigator);
 

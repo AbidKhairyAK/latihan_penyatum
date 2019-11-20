@@ -27,7 +27,7 @@
 			zooming(src) {
 				this.cur = src;
 				this.status = true;
-			}
+			},
 		}
 	}
 </script>

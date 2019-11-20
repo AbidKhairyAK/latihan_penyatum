@@ -5,30 +5,28 @@
 </template>
 
 <script>
-	import AsyncStorage from '@react-native-community/async-storage';
-	import axios from 'axios';
 
 	export default {
 		props: ['navigation'],
-		data: () => ({
-			check: false
-		}),
 		async created() {
-			const userToken = await AsyncStorage.getItem('@userToken');
-
-			axios.post(this.$url+'/api/auth/me', {}, {
-				headers: {'authorization' : 'Bearer '+userToken}
-			})
-			.then((res) => {
-				this.check = true;
-			})
-			.catch((e) => {
-				AsyncStorage.removeItem('@userToken');
-			})
-			.finally(() => {
-				this.navigation.navigate(this.check ? 'AppStack' : 'AuthStack');
-			});
-
+			const userToken = await this.$storage.getItem('@userToken');
+			if (userToken) {
+				this.$axios.post('/api/auth/me', {}, {
+					headers: {'authorization' : 'Bearer '+userToken},
+				})
+				.then((res) => {
+					this.navigation.navigate('AppStack');
+				})
+				.catch((e) => {
+					if(e.response && e.response.status == 401) { 
+						this.$storage.removeItem('@userToken'); 
+						this.navigation.navigate('AuthStack');
+					}
+					this.navigation.navigate('AppStack');
+				})
+			} else {
+				this.navigation.navigate('AuthStack');
+			}
 		}
 	}
 </script>

@@ -34,9 +34,7 @@
 </template>
 
 <script>
-	import axios from 'axios';
 	import { NavigationEvents } from 'vue-native-router';
-	import AsyncStorage from '@react-native-community/async-storage';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -50,10 +48,10 @@
 		}),
 		methods: {
 			async getData() {
-				const userToken = await AsyncStorage.getItem('@userToken');
+				const userToken = await this.$storage.getItem('@userToken');
 
 				this.loading = true;
-				axios.post(`${this.$url}/api/consultations/list`, {}, {
+				this.$axios.post(`/api/consultations/list`, {}, {
 					headers: {'authorization' : 'Bearer '+userToken}
 				})
 				.then((r) => {

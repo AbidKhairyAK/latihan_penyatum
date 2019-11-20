@@ -31,8 +31,6 @@
 </template>
 
 <script>
-	import axios from 'axios';
-
 	import CText from '../item/CText';
 
 	export default {
@@ -53,7 +51,7 @@
 			},
 			getData() {
 				this.loading = true;
-				axios.get(this.$url+'/libraries/list/'+this.title+'?s='+this.query)
+				this.$axios.get('/libraries/list/'+this.title+'?s='+this.query)
 				.then(({data}) => {
 					this.data = data.data;
 					this.loading = false;

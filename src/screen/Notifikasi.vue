@@ -5,14 +5,18 @@
 	    <view class="container">
 
 	    	<c-text class="title" size="sm" color="dark-green" weight="semi-bold">Semua Notifikasi</c-text>
-	    	<view class="accordion">
+
+				<activity-indicator :style="{marginTop: 30}" :size="50" color="#255d00" v-if="loading"/>
+
+	    	<view class="accordion" v-if="!loading">
   	      <nb-accordion
-  	        :dataArray="dataArray"
+  	        :dataArray="notifs"
 				    :renderHeader="_renderHeader"
 				    :renderContent="_renderContent"
 				    :onAccordionOpen="_onAccordionOpen"
   	      />
   	    </view>
+
 	    </view>
 
 	</nb-container>
@@ -21,6 +25,7 @@
 <script>
 	import React from "react";
 	import { View, Text, Icon } from "native-base";
+	import { TouchableOpacity } from "react-native";
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -28,33 +33,50 @@
 	export default {
 		components: {Navbar, CText},
 		props: ['navigation'],
-		computed: {
-			dataArray() {
-				let arr = [];
-				for (var i = 30; i >= 0; i--) {
-					arr[i] = { 'status': (i>4), 'title': `Judul Notifikasi ${i}`, 'content': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis urna, vitae tempus ligula. Duis hendrerit orci velit, at fringilla erat aliquet at. Nam aliquet semper pellentesque. Cras imperdiet dapibus faucibus. Quisque ut eros tempor, vestibulum libero eu, rhoncus massa." };
-				}
-				return arr;
-			}
-		},
+		data: () => ({
+			notifs: [],
+			loading: true,
+		}),
 		methods: {
 			navigate(to) {
 				this.navigation.navigate(to);
 			},
-			_renderContent: function({content}) {
+			async getNotifs() {
+				this.loading = true;
+				const userToken = await this.$storage.getItem('@userToken');
+
+				this.$axios.post('/api/notifications?limit=30', null, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
+				.then((res) => {
+					this.notifs = res.data;
+				})
+				.catch((e) => {
+					alert('gagal memuat notifikasi!');
+				})
+				.finally(() => {
+					this.loading = false;
+				});
+			},
+			_renderContent: function(data) {
 	      return (
-	        <CText style={{ backgroundColor: "#f4f4f4", padding: 10, lineHeight: 20}}>
-	          {content}
-	        </CText>
+	      	<View style={{ backgroundColor: "#f4f4f4", padding: 10 }}>
+		        <CText style={{ lineHeight: 20}}>
+		          {data.body}
+		        </CText>
+		        <TouchableOpacity onPress={() => this.openNotif(data)}>
+		        	<CText weight="bold" align="r" color="dark-green">Lihat Detail >></CText>
+		        </TouchableOpacity>
+	        </View>
 	      );
 	    },
-	    _renderHeader: function({title, status}, expanded) {
+	    _renderHeader: function({title, is_read}, expanded) {
 	      return (
 	        <View
 	          style={{ backgroundColor: "#eee", borderBottomWidth: 1, borderColor: "#ccc", flexDirection: "row", padding: 10, justifyContent: "space-between", alignItems: "center"}}
 	        >
 	          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-	            {status 
+	            {is_read 
 	            	? <Icon style={{ fontSize: 13, width: 25, color: '#555' }} name="check"  type="FontAwesome5"/> 
 	            	: <Icon style={{ fontSize: 13, width: 25, color: '#555' }} name="exclamation"  type="FontAwesome5"/> 
 	            }
@@ -67,9 +89,34 @@
 	        </View>
 	      );
 	    },
-	    _onAccordionOpen(d, i) {
-	    	this.dataArray[i].status = true;
-	    }
+	    async _onAccordionOpen(d, i) {
+	    	this.notifs.filter((x) => x.id == d.id)[0].is_read = 1;
+
+	    	const userToken = await this.$storage.getItem('@userToken');
+
+				this.$axios.post('/api/notifications/read/'+d.id, null, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				});
+	    },
+	    async openNotif(data) {
+				const userToken = await this.$storage.getItem('@userToken');
+
+				this.$axios.post('/api/notifications/read/'+data.id, null, {
+					headers: {'authorization' : 'Bearer '+userToken}
+				})
+
+				switch(data.type) {
+					case 'consultation':
+						this.navigation.navigate('DetailPertanyaan', {itemId: data.target});
+						break;
+					case 'library':
+						this.navigation.navigate('Detail', {id: data.target});
+						break;
+				}
+			}
+		},
+		created() {
+			this.getNotifs();
 		}
 	}
 </script>

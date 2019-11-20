@@ -60,7 +60,6 @@
 
 <script>
 import CText from '../item/CText';
-import axios from 'axios';
 
 export default {
 	components: {CText},
@@ -84,7 +83,7 @@ export default {
 			}
 
 			this.loading = true;
-			axios.post(this.$url+'/api/auth/register', this.form)
+			this.$axios.post('/api/auth/register', this.form)
 			.then((res) => {
 				alert('registrasi berhasil!');
 				this.navigation.navigate('Login');

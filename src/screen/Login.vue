@@ -40,8 +40,6 @@
 
 <script>
 import CText from '../item/CText';
-import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
 
 export default {
 	components: {CText},
@@ -61,14 +59,13 @@ export default {
 
 			this.loading = true;
 
-			axios.post(this.$url+'/api/auth/login/', this.form)
+			this.$axios.post('/api/auth/login/', this.form)
 			.then((res) => {
-				AsyncStorage.setItem('@userToken', res.data.access_token);
+				this.$storage.setItem('@userToken', res.data.access_token);
 				this.navigation.navigate('AppStack');
 			})
 			.catch((e) => {
-				const stat = e.response.status;
-				if (stat == 401) {
+				if (e.response && e.response.status == 401) {
 					alert('Maaf, anda belum terdaftar. Silahkan Registrasi terlebih dahulu.');
 				} else {
 					alert('Terjadi kesalahan dengan kode '+e+'. silahkan hubungi admin');

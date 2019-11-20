@@ -20,9 +20,6 @@
 </template>
 
 <script>
-	import AsyncStorage from '@react-native-community/async-storage';
-	import axios from 'axios';
-
 	export default {
 		props: {
 				navigation: Object,
@@ -37,13 +34,14 @@
 		methods: {
 			async logout() {
 				this.loading = true;
-				const userToken = await AsyncStorage.getItem('@userToken');
-				axios.post(this.$dev_url+'/api/auth/logout', {}, {
+				const userToken = await this.$storage.getItem('@userToken');
+				this.$axios.post('/api/auth/logout', {}, {
 					headers: {'authorization' : 'Bearer '+userToken}
 				})
 				.finally(() => {
 					this.loading = false;
-					AsyncStorage.removeItem('@userToken');
+					this.$storage.removeItem('@userToken');
+					this.$storage.removeItem('@onesignal_id');
 					this.navigation.navigate('AuthStack');
 				});
 			}

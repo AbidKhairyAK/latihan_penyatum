@@ -58,8 +58,6 @@
 
 <script>
 	import ImagePicker from 'react-native-image-picker';
-	import axios from 'axios';
-	import AsyncStorage from '@react-native-community/async-storage';
 
 	import Navbar from '../item/Navbar';
 	import CText from '../item/CText';
@@ -99,13 +97,13 @@
 			},
 			async sendData() {
 				const f = this.form;
-				const userToken = await AsyncStorage.getItem('@userToken');
+				const userToken = await this.$storage.getItem('@userToken');
 
 				if (f.title==null || f.type_id==null || f.indication==null) {
 					return alert('Kolom judul, tipe, dan gejala tidak boleh kosong!');
 				}
 				this.loading = true;
-				axios.post(`${this.$url}/api/consultations/save`, f, {
+				this.$axios.post(`/api/consultations/save`, f, {
 					headers: {'authorization' : 'Bearer '+userToken}
 				})
 				.then((r) => {

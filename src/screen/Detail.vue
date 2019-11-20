@@ -48,7 +48,6 @@
 	import React from 'react';
 	import { Dimensions, Image, View, TouchableOpacity } from 'react-native';
 	import { Icon } from 'native-base';
-	import axios from 'axios';
 	import Markdown from 'react-native-markdown-renderer';
 	import Carousel from 'react-native-snap-carousel';
 
@@ -75,7 +74,7 @@
 		methods: {
 			getData() {
 				let id = this.navigation.getParam('id', 0);
-				axios.get(this.$url+'/libraries/detail/'+id)
+				this.$axios.get('/libraries/detail/'+id)
 				.then(({data}) => {
 					this.data = data;
 					this.content = data.description;
