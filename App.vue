@@ -15,8 +15,8 @@
 
   Vue.use(VueNativeBase);
 
-  // const base_url = 'http://root-dpbk.localhost.run';
-  const base_url = 'http://209.97.169.78:4367';
+  const base_url = 'https://me-esoj.localhost.run';
+  // const base_url = 'http://209.97.169.78:4367';
 
   // Vue.prototype.$store = Store;
   Vue.prototype.$url = base_url;
