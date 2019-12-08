@@ -2,7 +2,7 @@
 	<nb-container>
 		<navbar :navigation="navigation" :left="true" hasTabs />
 
-		<c-text class="title" color="dark-green" size="md" weight="semi-bold" align="c">{{ data.name }}</c-text>
+		<c-text class="title" color="dark-green" size="md" weight="semi-bold" align="c">{{ is_ind ? data.name : data.name_en }}</c-text>
 
 		<carousel
 			:data="entries"
@@ -62,14 +62,23 @@
 			active: 1,
 			entries: [],
 			data: {},
-			title: ['Deskripsi', 'Gejala', 'Pengendalian'],
 			content: '',
 			zooms: {img: null, status: false}
 		}),
 		computed: {
 			screenWidth() {
 				return Dimensions.get('window').width;
-			}
+			},
+			ui() {
+				return this.$store.getters.ui.detailScreen;
+			},
+			is_ind() {
+				return this.$store.getters.is_ind;
+			},
+			title() {
+				return [ this.ui.desc, this.ui.indi, this.ui.cont ];
+			},
+
 		},
 		methods: {
 			getData() {
@@ -77,7 +86,7 @@
 				this.$axios.get('/libraries/detail/'+id)
 				.then(({data}) => {
 					this.data = data;
-					this.content = data.description;
+					this.content = this.is_ind ? data.description : data.description_en;
 					this.entries = data.images;
 				});
 			},
@@ -87,9 +96,9 @@
 			changeDesc(i) {
 				this.active = i;
 				switch(i){
-					case 1: this.content = this.data.description; break;
-					case 2: this.content = this.data.indication; break;
-					case 3: this.content = this.data.control; break;
+					case 1: this.content = this.is_ind ? this.data.description : this.data.description_en; break;
+					case 2: this.content = this.is_ind ? this.data.indication : this.data.indication_en; break;
+					case 3: this.content = this.is_ind ? this.data.control : this.data.control_en; break;
 				}
 			},
 			zooming(src) {
@@ -139,6 +148,11 @@
 						</View>
 					</View>
 				);
+			}
+		},
+		watch: {
+			is_ind(val) {
+				this.changeDesc(this.active);
 			}
 		},
 		created() {

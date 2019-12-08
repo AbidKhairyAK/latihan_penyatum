@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="search-wrapper">
 			<nb-item rounded class="search-item">
-		    <nb-input class="search-input" v-model="query" :placeholder="'Cari '+title+'...'"/>
+		    <nb-input class="search-input" v-model="query" :placeholder="ui.search+' '+s+'...'"/>
 		    <touchable-opacity :on-press="() => getData()">
 			    <nb-icon name="search" class="search-icon"/>
 			  </touchable-opacity>
@@ -22,7 +22,7 @@
 		  					:style="{height: listWidth}"
 		  				/>
 		  			</view>
-		  			<c-text class="list-title" align="c" :size="11">{{ item.name }}</c-text>
+		  			<c-text class="list-title" align="c" :size="11">{{ is_ind ? item.name : item.name_en }}</c-text>
 		  		</view>
 		  	</touchable-opacity>
 	  	</view>
@@ -35,13 +35,21 @@
 
 	export default {
 		components: {CText},
-		props: ['navigation', 'title'],
+		props: ['navigation', 'title', 's'],
 		data: () => ({
 			listWidth: 0,
 			data: {},
 			loading: true,
 			query: ''
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.libraryScreen;
+			},
+			is_ind() {
+				return this.$store.getters.is_ind;
+			}
+		},
 		methods: {
 			getListWidth(event) {
 				this.listWidth = event.nativeEvent.layout.width;

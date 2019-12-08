@@ -6,25 +6,31 @@
 				<nb-icon name="arrow-back" />
 			</nb-button>
 		</nb-left>
+		<nb-left v-if="out" class="left">
+			<nb-button transparent :on-press="() => logout()" v-if="!loading">
+				<nb-icon name="sign-out-alt" type="FontAwesome5" class="out"/>
+			</nb-button>
+			<activity-indicator :size="30" color="#fff" v-if="loading"/>
+		</nb-left>
 		<nb-body>
 			<nb-title></nb-title>
 		</nb-body>
-		<nb-right v-if="right" class="right">
-			<nb-button transparent :on-press="() => logout()" v-if="!loading">
-				<nb-icon name="sign-out-alt" type="FontAwesome5"/>
-			</nb-button>
-			<activity-indicator :size="30" color="#fff" v-if="loading"/>
+		<nb-right class="right">
+			<lang-button class="lang" white></lang-button>
 		</nb-right>
 		<text class="title">{{ title }}</text>
 	</nb-header>
 </template>
 
 <script>
+	import LangButton from './LangButton';
+
 	export default {
+		components: {LangButton},
 		props: {
 				navigation: Object,
 				left: {default: false},
-				right: {default: false},
+				out: {default: false},
 				hasTabs: {default: false},
 				title: {default: 'PestBook'}
 		},
@@ -66,5 +72,11 @@
 	}
 	.right {
 		z-index: 1;
+	}
+	.lang {
+		align-self: center;
+	}
+	.out {
+		transform: scaleX(-1);
 	}
 </style>

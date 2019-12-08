@@ -4,7 +4,7 @@
 
 	    <view class="container">
 
-	    	<c-text class="title" size="sm" color="dark-green" weight="semi-bold">Semua Notifikasi</c-text>
+	    	<c-text class="title" size="sm" color="dark-green" weight="semi-bold">{{ ui.all }}</c-text>
 
 				<activity-indicator :style="{marginTop: 30}" :size="50" color="#255d00" v-if="loading"/>
 
@@ -37,6 +37,14 @@
 			notifs: [],
 			loading: true,
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.notifikasiScreen;
+			},
+			is_ind() {
+				return this.$store.getters.is_ind;
+			}
+		},
 		methods: {
 			navigate(to) {
 				this.navigation.navigate(to);
@@ -62,15 +70,15 @@
 	      return (
 	      	<View style={{ backgroundColor: "#f4f4f4", padding: 10 }}>
 		        <CText style={{ lineHeight: 20}}>
-		          {data.body}
+		          {this.is_ind ? data.body : data.body_en}
 		        </CText>
 		        <TouchableOpacity onPress={() => this.openNotif(data)}>
-		        	<CText weight="bold" align="r" color="dark-green">Lihat Detail >></CText>
+		        	<CText weight="bold" align="r" color="dark-green">{this.ui.detail} >></CText>
 		        </TouchableOpacity>
 	        </View>
 	      );
 	    },
-	    _renderHeader: function({title, is_read}, expanded) {
+	    _renderHeader: function({title, title_en, is_read}, expanded) {
 	      return (
 	        <View
 	          style={{ backgroundColor: "#eee", borderBottomWidth: 1, borderColor: "#ccc", flexDirection: "row", padding: 10, justifyContent: "space-between", alignItems: "center"}}
@@ -80,7 +88,7 @@
 	            	? <Icon style={{ fontSize: 13, width: 25, color: '#555' }} name="check"  type="FontAwesome5"/> 
 	            	: <Icon style={{ fontSize: 13, width: 25, color: '#555' }} name="exclamation"  type="FontAwesome5"/> 
 	            }
-	            	<CText size={17}>{title}</CText>
+	            	<CText size={17}>{this.is_ind ? title : title_en}</CText>
 	          </View>
 	          {expanded
 	            ? <Icon style={{ fontSize: 18, color: '#555' }} name="angle-down" type="FontAwesome5" />

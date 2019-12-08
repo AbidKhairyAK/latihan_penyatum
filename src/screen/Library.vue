@@ -2,29 +2,29 @@
 	<nb-container>
 		<navbar :navigation="navigation" :left="true" hasTabs />
 		<nb-tabs class="tabs">
-			<nb-tab heading="Hama"
+			<nb-tab :heading="ui.uchama"
 				:tabStyle="tab.tabStyle"
 				:activeTabStyle="tab.activeTabStyle"
 				:textStyle="tab.textStyle"
 				:activeTextStyle="tab.activeTextStyle"
 			>
-				<library-list title="hama" :navigation="navigation"/>
+				<library-list title="hama" :s="ui.lchama" :navigation="navigation"/>
 			</nb-tab>
-			<nb-tab heading="Penyakit"
+			<nb-tab :heading="ui.ucpenyakit"
 				:tabStyle="tab.tabStyle"
 				:activeTabStyle="tab.activeTabStyle"
 				:textStyle="tab.textStyle"
 				:activeTextStyle="tab.activeTextStyle"
 			>
-				<library-list title="penyakit" :navigation="navigation"/>
+				<library-list title="penyakit" :s="ui.lcpenyakit" :navigation="navigation"/>
 			</nb-tab>
-			 <nb-tab heading="Abiotik"
+			 <nb-tab :heading="ui.ucabiotik"
 				:tabStyle="tab.tabStyle"
 				:activeTabStyle="tab.activeTabStyle"
 				:textStyle="tab.textStyle"
 				:activeTextStyle="tab.activeTextStyle"
 			>
-				<library-list title="abiotik" :navigation="navigation"/>
+				<library-list title="abiotik" :s="ui.lcabiotik" :navigation="navigation"/>
 			</nb-tab>
 		</nb-tabs>
 	</nb-container>
@@ -46,6 +46,11 @@
 		data: () => ({
 			tab: { tabStyle, activeTabStyle, textStyle, activeTextStyle },
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.libraryScreen;
+			}
+		},
 		methods: {
 			navigate(to) {
 				this.navigation.navigate(to);

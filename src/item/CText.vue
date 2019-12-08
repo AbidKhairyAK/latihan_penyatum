@@ -1,5 +1,12 @@
 <template>
-	<nb-text selectable :style="{ fontFamily: textWeight, color: textColor, fontSize: textSize, textAlign: textAlign }">
+	<nb-text selectable :style="{ 
+		fontFamily: textWeight, 
+		color: textColor, 
+		fontSize: textSize, 
+		textAlign: textAlign, 
+		textShadowColor: border_color,
+		textShadowRadius: border_width,
+	}">
 		<slot></slot>
 	</nb-text>
 </template>
@@ -11,6 +18,8 @@
 			color: 'light' | 'dark' | 'dark-green' | String,
 			size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | Number,
 			align: 'c' | 'l' | 'r',
+			border_color: String,
+			border_width: Number,
 		},
 		computed: {
 			font() {

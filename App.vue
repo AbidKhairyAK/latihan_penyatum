@@ -11,14 +11,14 @@
   import axios from 'axios';
 
   import StackNavigator from './src/router.js';
-  // import Store from './src/store.js';
+  import Store from './src/store.js';
 
   Vue.use(VueNativeBase);
 
-  const base_url = 'https://me-esoj.localhost.run';
-  // const base_url = 'http://209.97.169.78:4367';
+  // const base_url = 'http://root-5k4r.localhost.run';
+  const base_url = 'http://209.97.169.78:4367';
 
-  // Vue.prototype.$store = Store;
+  Vue.prototype.$store = Store;
   Vue.prototype.$url = base_url;
   Vue.prototype.$storage = AsyncStorage;
   Vue.prototype.$axios = axios.create({

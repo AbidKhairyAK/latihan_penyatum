@@ -139,7 +139,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.penyakit_tumbuhan"
+        applicationId "com.pestbook"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
