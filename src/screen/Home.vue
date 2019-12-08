@@ -1,6 +1,6 @@
 <template>
 	<nb-container>
-		<navbar :navigation="navigation" right/>
+		<navbar :navigation="navigation" out lang/>
 
 		<view class="menu-wrapper">
 				<view class="menu-item-wrapper">
@@ -8,8 +8,8 @@
 						<view class="menu-item">
 							<nb-icon name="pagelines" type="FontAwesome5" class="menu-icon" />
 							<view class="menu-caption">
-								<c-text class="menu-title" size="md" color="dark-green" weight="semi-bold">Library HPT</c-text>
-								<c-text class="menu-subtitle" size="sm">Phasellus et blandit elit. Suspendisse sit amet vulputate libero.</c-text>
+								<c-text class="menu-title" size="md" color="dark-green" weight="semi-bold">{{ ui.library_title }}</c-text>
+								<c-text class="menu-subtitle" size="sm">{{ ui.library_subtitle }}</c-text>
 							</view>
 						</view>
 					</touchable-opacity>
@@ -19,8 +19,8 @@
 						<view class="menu-item">
 							<nb-icon name="camera-retro" type="FontAwesome5" class="menu-icon" />
 							<view class="menu-caption">
-								<c-text class="menu-title" size="md" color="dark-green" weight="semi-bold">Konsultasi</c-text>
-								<c-text class="menu-subtitle" size="sm">Phasellus et blandit elit. Suspendisse sit amet vulputate libero.</c-text>
+								<c-text class="menu-title" size="md" color="dark-green" weight="semi-bold">{{ ui.cons_title }}</c-text>
+								<c-text class="menu-subtitle" size="sm">{{ ui.cons_subtitle }}</c-text>
 							</view>
 						</view>
 					</touchable-opacity>
@@ -30,18 +30,18 @@
 		<activity-indicator :style="{marginTop: 30}" :size="50" color="#255d00" v-if="loading"/>
 
 		<view class="notif-wrapper" v-if="!loading">
-			<c-text class="notif-header" color="dark-green" size="sm" weight="semi-bold">Notifikasi:</c-text>
+			<c-text class="notif-header" color="dark-green" size="sm" weight="semi-bold">{{ ui.notif }}:</c-text>
 
 			<touchable-opacity v-for="notif in notifs" :on-press="() => openNotif(notif)">
 				<c-text 
 					class="notif-item" 
 					:weight="notif.is_read ? null : 'bold'"
 					:color="notif.is_read ? null : 'dark-green'"
-				>> {{ notif.title }}</c-text>
+				>> {{ is_ind ? notif.title : notif.title_en }}</c-text>
 			</touchable-opacity>
 
 			<touchable-opacity class="notif-more" :on-press="() => navigate('Notifikasi')">
-				<c-text color="dark-green" weight="semi-bold">Lihat semua notifikasi ></c-text>
+				<c-text color="dark-green" weight="semi-bold">{{ ui.more_notif }} ></c-text>
 			</touchable-opacity>
 		</view>
 
@@ -60,6 +60,14 @@
 			notifs: [],
 			loading: true,
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.homeScreen;
+			},
+			is_ind() {
+				return this.$store.getters.is_ind;
+			}
+		},
 		methods: {
 			navigate(to) {
 				this.navigation.navigate(to);

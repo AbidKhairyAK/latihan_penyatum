@@ -2,47 +2,51 @@
 	<nb-container>
 		<status-bar backgroundColor="transparent" translucent barStyle="light-content" />
 
-  		<image-background :source="require('../../assets/img/nature1.jpg')" class="container">
+			<image-background :source="require('../../assets/img/nature1.jpg')" class="container">
 
-  			<view class="logo">
-  				<c-text class="logo-item" size="sm">LOGO</c-text>
-  				<c-text class="logo-item" size="sm">LOGO</c-text>
-  			</view>
+				<view class="logo">
+					<c-text class="logo-item" size="sm">LOGO</c-text>
+					<c-text class="logo-item" size="sm">LOGO</c-text>
+				</view>
 
-	  		<c-text size="xl" weight="bold" color="dark-green" align="c" class="app-title">PestBook</c-text>
+				<c-text size="xl" weight="bold" color="dark-green" align="c" class="app-title">PestBook</c-text>
 
-		    <nb-form class="form">
+				<nb-form class="form">
 
-		    	<c-text class="subtitle" color="dark-green" size="md" weight="semi-bold">Form Login</c-text>
+					<view class="subtitle-wrapper">
+						<c-text class="subtitle" color="dark-green" size="md" weight="semi-bold">{{ ui.head_title }}</c-text>
+						<lang-button></lang-button>
+					</view>
 
-		      <c-text color="dark-green" class="label">Email</c-text>
-		      <nb-item class="item" regular>
-		        <nb-input class="input" v-model="form.email" auto-capitalize="none" keyboard-type="email-address" text-content-type="emailAddress" auto-complete-type="email"/>
-		      </nb-item>
+					<c-text color="dark-green" class="label">Email</c-text>
+					<nb-item class="item" regular>
+						<nb-input class="input" v-model="form.email" auto-capitalize="none" keyboard-type="email-address" text-content-type="emailAddress" auto-complete-type="email"/>
+					</nb-item>
 
-			    <c-text color="dark-green" class="label">Password</c-text>
-		      <view class="pass">
-			      <nb-item class="item pass-item" regular>
-			        <nb-input class="input" secureTextEntry v-model="form.password"/>
-			      </nb-item>
+					<c-text color="dark-green" class="label">Password</c-text>
+					<view class="pass">
+						<nb-item class="item pass-item" regular>
+							<nb-input class="input" secureTextEntry v-model="form.password"/>
+						</nb-item>
 
-		      	<nb-button success full small class="button" :on-press="() => login()" v-if="!loading"><c-text weight="bold" color="light">Login >></c-text></nb-button>
+						<nb-button success full small class="button" :on-press="() => login()" v-if="!loading"><c-text weight="bold" color="light">Login >></c-text></nb-button>
 						<activity-indicator :style="{marginTop: 5, flex: 3}" :size="30" color="#255d00" v-if="loading"/>
 
-			    </view>
+					</view>
 				
-				<touchable-opacity :on-press="() => navigation.navigate('Register')"><c-text class="reg-button" color="dark-green">Belum punya akun? Registrasi</c-text></touchable-opacity>
-		    </nb-form>
-		  </image-background>
+				<touchable-opacity :on-press="() => navigation.navigate('Register')"><c-text class="reg-button" color="dark-green">{{ ui.register }}</c-text></touchable-opacity>
+				</nb-form>
+			</image-background>
 
 	</nb-container>
 </template>
 
 <script>
 import CText from '../item/CText';
+import LangButton from '../item/LangButton';
 
 export default {
-	components: {CText},
+	components: {CText, LangButton},
 	props: ['navigation'],
 	data: () => ({
 		loading: false,
@@ -50,6 +54,11 @@ export default {
 			email: null, password: null
 		}
 	}),
+	computed: {
+		ui() {
+			return this.$store.getters.ui.loginScreen;
+		}
+	},
 	methods: {
 		login() {
 			if (this.form.email == null || this.form.password == null) {
@@ -103,6 +112,11 @@ export default {
 }
 .form {
 	flex: 5;
+}
+.subtitle-wrapper {
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
 .subtitle {
 	margin-bottom: 20;

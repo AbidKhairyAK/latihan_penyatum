@@ -1,6 +1,6 @@
 <template>
 	<nb-container>
-		<navbar :navigation="navigation" title="Konsultasi" left/>
+		<navbar :navigation="navigation" :title="ui.title" left/>
 
 		<view class="container">
 			<activity-indicator v-if="loading" :style="{marginTop: 30}" :size="50" color="#255d00"/>
@@ -15,13 +15,13 @@
 					</touchable-opacity>
 
 					<nb-badge class="badge">
-		          <c-text weight="semi-bold" color="light">{{ item.type.name }}</c-text>
+		          <c-text weight="semi-bold" color="light">{{ type }}</c-text>
 		      </nb-badge>
 					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">{{ item.title }}</c-text>
 
 					<markdown>{{ item.indication }}</markdown>
 
-					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">Jawaban:</c-text>
+					<c-text class="question" size="sm" weight="semi-bold" color="dark-green">{{ ui.answer }}:</c-text>
 
 					<markdown>{{ item.answer }}</markdown>
 
@@ -52,6 +52,21 @@
 			item: {},
 			zooms: {img: null, status: false}
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.detailPertanyaanScreen;
+			},
+			is_ind() {
+				return this.$store.getters.is_ind;
+			},
+			type() {
+				switch(this.item.type.name) {
+					case 'hama': return this.is_ind ? 'hama' : 'pest'; break;
+					case 'penyakit': return this.is_ind ? 'penyakit' : 'disease'; break;
+					case 'abiotik': return this.is_ind ? 'abiotik' : 'abiotic'; break;
+				}
+			}
+		},
 		methods: {
 			async getData() {
 				const userToken = await AsyncStorage.getItem('@userToken');

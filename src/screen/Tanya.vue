@@ -1,15 +1,15 @@
 <template>
 	<nb-container>
-		<navbar :navigation="navigation" title="Konsultasi" left/>
+		<navbar :navigation="navigation" :title="ui.title" left/>
 
 	    <nb-form class="form">
 
-				<c-text weight="semi-bold" :size="17">Judul pertanyaan:</c-text>
+				<c-text weight="semi-bold" :size="17">{{ ui.judul }}:</c-text>
 				<nb-item class="item input" regular>
 				  <nb-input v-model="form.title"/>
 				</nb-item>
 
-				<c-text weight="semi-bold" :size="17">Jenis:</c-text>
+				<c-text weight="semi-bold" :size="17">{{ ui.jenis }}:</c-text>
 				<view class="picker-wrapper input">
 					<nb-picker
 						class="picker"
@@ -17,25 +17,25 @@
 	          :selected-value="selected"
 	          :on-value-change="onValueChange"
 	        >
-	          <item label="Hama" :value="1" />
-	          <item label="Penyakit" :value="2" />
-	          <item label="Abiotik" :value="3" />
+	          <item :label="ui.opthama" :value="1" />
+	          <item :label="ui.optpenyakit" :value="2" />
+	          <item :label="ui.optabiotik" :value="3" />
 	        </nb-picker>
 	      </view>
 
-				<c-text weight="semi-bold" :size="17">Gejala yang tampak:</c-text>
+				<c-text weight="semi-bold" :size="17">{{ ui.gejala }}:</c-text>
 				<nb-textarea class="input" :row-span="5" bordered v-model="form.indication"/>
 
-				<c-text weight="semi-bold" :size="17">Upload Foto:</c-text>
+				<c-text weight="semi-bold" :size="17">{{ ui.upload }}:</c-text>
 				<view class="photo-wrapper">
 					<view>
 						<touchable-opacity class="photo-button" :on-press="() => getImage('camera')">
 							<nb-icon name="camera" type="FontAwesome5" class="photo-icon"></nb-icon>
-							<c-text weight="semi-bold">Dari Kamera</c-text>
+							<c-text weight="semi-bold">{{ ui.camera }}</c-text>
 						</touchable-opacity>
 						<touchable-opacity class="photo-button" :on-press="() => getImage('galery')">
 							<nb-icon name="file-image" type="FontAwesome5" class="photo-icon"></nb-icon>
-							<c-text weight="semi-bold">Dari Galeri</c-text>
+							<c-text weight="semi-bold">{{ ui.galery }}</c-text>
 						</touchable-opacity>
 					</view>
 
@@ -73,6 +73,11 @@
 				title: null, type_id: 1, indication: null, image: null
 			}
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.tanyaScreen;
+			}
+		},
 		methods: {
 			navigate(to) {
 				this.navigation.navigate(to);

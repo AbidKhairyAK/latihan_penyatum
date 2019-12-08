@@ -1,4 +1,4 @@
-package com.penyakit_tumbuhan;
+package com.pestbook;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
 	 */
 	@Override
 	protected String getMainComponentName() {
-		return "penyakit_tumbuhan";
+		return "pestbook";
 	}
 
 	@Override

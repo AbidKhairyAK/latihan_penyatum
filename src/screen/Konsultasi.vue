@@ -2,7 +2,7 @@
 	<nb-container>
 		<navigation-events :on-will-focus="() => getData()"></navigation-events>
 
-		<navbar :navigation="navigation" title="Konsultasi" left/>
+		<navbar :navigation="navigation" :title="ui.title" left/>
 
     <view class="container">
     	<nb-button full rounded class="ask" :on-press="() => navigate('Tanya')">
@@ -10,10 +10,10 @@
         	color="light"
         	weight="medium"
         	:size="17"
-        >Ajukan pertanyaan ></c-text>
+        >{{ ui.ask }} ></c-text>
       </nb-button>
 
-    	<c-text class="respon-title" size="sm" color="dark-green" weight="semi-bold">Respon pertanyaan anda</c-text>
+    	<c-text class="respon-title" size="sm" color="dark-green" weight="semi-bold">{{ ui.respon }}</c-text>
 
     	<scroll-view>
 			<activity-indicator v-if="loading" :style="{marginTop: 30}" :size="50" color="#255d00"/>
@@ -46,6 +46,11 @@
 			items: [],
 			loading: true,
 		}),
+		computed: {
+			ui() {
+				return this.$store.getters.ui.konsultasiScreen;
+			}
+		},
 		methods: {
 			async getData() {
 				const userToken = await this.$storage.getItem('@userToken');

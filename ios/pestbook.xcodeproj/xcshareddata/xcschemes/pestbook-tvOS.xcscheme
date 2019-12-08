@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "penyakit_tumbuhan-tvOS.app"
-               BlueprintName = "penyakit_tumbuhan-tvOS"
-               ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+               BuildableName = "pestbook-tvOS.app"
+               BlueprintName = "pestbook-tvOS"
+               ReferencedContainer = "container:pestbook.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "penyakit_tumbuhan-tvOSTests.xctest"
-               BlueprintName = "penyakit_tumbuhan-tvOSTests"
-               ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+               BuildableName = "pestbook-tvOSTests.xctest"
+               BlueprintName = "pestbook-tvOSTests"
+               ReferencedContainer = "container:pestbook.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "penyakit_tumbuhan-tvOSTests.xctest"
-               BlueprintName = "penyakit_tumbuhan-tvOSTests"
-               ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+               BuildableName = "pestbook-tvOSTests.xctest"
+               BlueprintName = "pestbook-tvOSTests"
+               ReferencedContainer = "container:pestbook.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "penyakit_tumbuhan-tvOS.app"
-            BlueprintName = "penyakit_tumbuhan-tvOS"
-            ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+            BuildableName = "pestbook-tvOS.app"
+            BlueprintName = "pestbook-tvOS"
+            ReferencedContainer = "container:pestbook.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "penyakit_tumbuhan-tvOS.app"
-            BlueprintName = "penyakit_tumbuhan-tvOS"
-            ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+            BuildableName = "pestbook-tvOS.app"
+            BlueprintName = "pestbook-tvOS"
+            ReferencedContainer = "container:pestbook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "penyakit_tumbuhan-tvOS.app"
-            BlueprintName = "penyakit_tumbuhan-tvOS"
-            ReferencedContainer = "container:penyakit_tumbuhan.xcodeproj">
+            BuildableName = "pestbook-tvOS.app"
+            BlueprintName = "pestbook-tvOS"
+            ReferencedContainer = "container:pestbook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

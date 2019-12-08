@@ -1,5 +1,5 @@
 {
-  "name": "penyakit_tumbuhan",
+  "name": "pestbook",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -29,7 +29,8 @@
     "vue-native-core": "^0.1.4",
     "vue-native-helper": "^0.1.4",
     "vue-native-router": "^0.1.1",
-    "vue-native-scripts": "^0.1.4"
+    "vue-native-scripts": "^0.1.4",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

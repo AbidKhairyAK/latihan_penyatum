@@ -10,6 +10,12 @@
 		props: ['navigation'],
 		async created() {
 			const userToken = await this.$storage.getItem('@userToken');
+			const lang = await this.$storage.getItem('@lang');
+
+			if (lang) {
+				this.$store.dispatch('changeLang', lang);
+			}
+
 			if (userToken) {
 				this.$axios.post('/api/auth/me', {}, {
 					headers: {'authorization' : 'Bearer '+userToken},

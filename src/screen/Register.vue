@@ -13,7 +13,7 @@
 
 			<nb-form class="form">
 
-				<c-text class="subtitle" color="dark-green" size="md" weight="semi-bold">Form Register</c-text>
+				<c-text class="subtitle" color="dark-green" size="md" weight="semi-bold">{{ ui.head_title }}</c-text>
 
 				<c-text color="dark-green" class="label">Username</c-text>
 				<nb-item class="item" regular>
@@ -25,7 +25,7 @@
 					<nb-input class="input" v-model="form.email" auto-capitalize="none" keyboard-type="email-address" text-content-type="emailAddress" auto-complete-type="email"/>
 				</nb-item>
 
-				<c-text color="dark-green" class="label">No Handphone</c-text>
+				<c-text color="dark-green" class="label">{{ ui.hp }}</c-text>
 				<nb-item class="item" regular>
 					<nb-input class="input" v-model="form.phone" keyboard-type="number-pad"/>
 				</nb-item>
@@ -38,7 +38,7 @@
 						</nb-item>
 					</view>
 					<view class="pass-item">
-						<c-text color="dark-green" class="label">Ulangi Password</c-text>
+						<c-text color="dark-green" class="label">{{ ui.repeat }}</c-text>
 						<nb-item class="item" regular>
 							<nb-input class="input" secureTextEntry v-model="form.password_confirm"/>
 						</nb-item>
@@ -46,9 +46,9 @@
 				</view>
 
 				<view class="button-wrapper">
-					<nb-button :on-press="() => navigation.goBack()" light small class="button"><c-text color="dark"><< Kembali</c-text></nb-button>
+					<nb-button :on-press="() => navigation.goBack()" light small class="button"><c-text color="dark"><< {{ ui.back }}</c-text></nb-button>
 
-					<nb-button :on-press="() => reg()" success small class="button" v-if="!loading"><c-text weight="bold" color="light">Daftar >></c-text></nb-button>
+					<nb-button :on-press="() => reg()" success small class="button" v-if="!loading"><c-text weight="bold" color="light">{{ ui.submit }} >></c-text></nb-button>
 					<activity-indicator :size="30" color="#255d00" v-if="loading"/>
 				</view>
 
@@ -70,6 +70,11 @@ export default {
 			name: null, email: null, phone: null, password: null, password_confirm: null, 
 		}
 	}),
+	computed: {
+		ui() {
+			return this.$store.getters.ui.registerScreen;
+		}
+	},
 	methods: {
 		reg() {
 			const f = this.form;
